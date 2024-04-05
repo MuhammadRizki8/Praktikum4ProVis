@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masonry_view/flutter_masonry_view.dart';
 import 'package:profile_app/widgets/CardProfile.dart';
+import 'package:profile_app/widgets/DialogFloatingActionButton.dart';
 
 void main() {
   runApp(const MyApp());
@@ -67,6 +68,24 @@ class _HomeState extends State<Home> {
             },
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return DialogFloatingActionButton();
+            },
+          ).then((value) {
+            if (value != null) {
+              setState(
+                () {
+                  _items.add(value);
+                },
+              );
+            }
+          });
+        },
       ),
     );
   }
