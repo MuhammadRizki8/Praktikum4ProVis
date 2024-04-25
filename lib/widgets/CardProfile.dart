@@ -1,59 +1,39 @@
 import 'package:flutter/material.dart';
+import '../models/photo.dart';
 
 class CardProfile extends StatelessWidget {
+  final Photo item;
+
   const CardProfile({
     Key? key,
     required this.item,
   }) : super(key: key);
 
-  final Map<String, String> item;
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromARGB(255, 240, 205, 234),
+      color: const Color.fromARGB(255, 240, 205, 234),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.network(
-            item['image']!,
-            // loadingBuilder: (BuildContext context, Widget child,
-            //     ImageChunkEvent? loadingProgress) {
-            //   if (loadingProgress == null) {
-            //     return child;
-            //   } else {
-            //     return Center(
-            //       child: CircularProgressIndicator(
-            //         value: loadingProgress.expectedTotalBytes != null
-            //             ? loadingProgress.cumulativeBytesLoaded /
-            //                 loadingProgress.expectedTotalBytes!
-            //             : null,
-            //       ),
-            //     );
-            //   }
-            // },
+            item.downloadUrl,
             width: double.infinity,
             fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                const Text('Could not load image'),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Padding(
-            padding: EdgeInsets.only(left: 8, top: 2, right: 2, bottom: 8),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  item['title']!,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 4),
-                Text(
-                  item['description']!,
-                  style: TextStyle(fontSize: 14),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                Text(item.id,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(item.author, style: const TextStyle(fontSize: 14)),
               ],
             ),
           ),

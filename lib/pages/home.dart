@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masonry_view/flutter_masonry_view.dart';
 import 'package:profile_app/widgets/CardProfile.dart';
-import 'package:profile_app/widgets/DialogFloatingActionButton.dart';
+import '../models/photo.dart';
+import '../services/photo_service.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -11,23 +12,28 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<Map<String, String>> _items = [
-    {
-      'image': 'https://source.unsplash.com/random/15',
-      'title': 'Judul Nyoba 1',
-      'description': 'Deskripsi Nyoba 1'
-    },
-    {
-      'image': 'https://source.unsplash.com/random/17',
-      'title': 'Judul Nyoba 2',
-      'description': 'Deskripsi Nyoba 2'
-    },
-    {
-      'image': 'https://source.unsplash.com/random/13',
-      'title': 'Judul Nyoba 3',
-      'description': 'Deskripsi Nyoba 3'
-    },
-  ];
+  final PhotoService _photoService = PhotoService();
+  List<Photo> _photos = [];
+  bool _isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    try {
+      _photos = await _photoService.fetchPhotos();
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      print("error");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,36 +42,20 @@ class _HomeState extends State<Home> {
         backgroundColor: Color.fromARGB(255, 231, 154, 218),
         title: const Text('Gallery'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: MasonryView(
-            listOfItem: _items,
-            numberOfColumn: 2,
-            itemBuilder: (item) {
-              return CardProfile(item: item);
-            },
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return DialogFloatingActionButton();
-            },
-          ).then((value) {
-            if (value != null) {
-              setState(
-                () {
-                  _items.add(value);
-                },
-              );
-            }
-          });
-        },
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: MasonryView(
+                  listOfItem: _photos,
+                  numberOfColumn: 2,
+                  itemBuilder: (item) {
+                    return CardProfile(item: item);
+                  },
+                ),
+              ),
+            ),
     );
   }
 }
