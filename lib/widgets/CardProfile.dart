@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/photo.dart';
+import '../models/product.dart';
 
 class CardProfile extends StatelessWidget {
-  final Photo item;
+  final Product item;
 
   const CardProfile({
     Key? key,
@@ -17,7 +17,7 @@ class CardProfile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.network(
-            item.downloadUrl,
+            item.image,
             width: double.infinity,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) =>
@@ -29,11 +29,18 @@ class CardProfile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.id,
+                Text(item.title,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold)),
+                        color: Colors.blueGrey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Text(item.author, style: const TextStyle(fontSize: 14)),
+                Text(item.category, style: const TextStyle(fontSize: 14)),
+                Text(item.price.toString() + "\$",
+                    style: const TextStyle(
+                        fontSize: 16, color: Colors.deepPurpleAccent)),
+                const SizedBox(height: 4),
+                Text(item.description, style: const TextStyle(fontSize: 10)),
               ],
             ),
           ),
